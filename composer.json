@@ -1,0 +1,17 @@
+{
+    "name": "upsun/drupal-testing",
+    "description": "Initialize phpunit and Seleium test framework for Upsun and ddev style projects",
+    "type": "library",
+    "require": {
+    },
+    "require-dev": {
+        "drupal/core-dev": "11.x-dev"
+    },
+    "authors": [
+        {
+            "name": "dman",
+            "email": "dman@coders.co.nz"
+        }
+    ],
+    "minimum-stability": "dev"
+}
