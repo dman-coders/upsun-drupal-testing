@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Functions to help set up writable simpletest directories
+
+# These functions may be run from either inside the container or outside
+# as long as the relevant app paths are set relatively.
+
+# This edits the config YAML to add a writable mount for simpletest
+# Can be used on `platform.app.yaml, applications.yaml, or `upsun/config.yaml` equally, just define the YAML prefix accordingly.
+add_simpletest_dir_as_writable(){
+  CONFIG_YAML_FILE="$1"
+  YAML_PREFIX="$2"
+
+  if [[ ! -f "$CONFIG_YAML_FILE" ]]; then
+    log_warning "$CONFIG_YAML_FILE not found, skipping simpletest mount setup."
+    return 0
+  fi
+  log_info "Add the simpletest directory as a mount so that tests can be run inside Upsun hosting"
+  # requires `yq`
+  yq --version >/dev/null || { echo "Please install yq or edit the YAML file manually"; return 1; }
+  yaml_snippet='{
+      "source": "local",
+      "source_path": "simpletest"
+  }'
+  yq -I4 e "${YAML_PREFIX}.mounts[\"/${WEB_ROOT}/sites/simpletest\"] = ${yaml_snippet} " "$CONFIG_YAML_FILE" -i
+
+  yaml_snippet='{
+      "allow": true,
+      "root": "${WEB_ROOT}/sites/simpletest"
+  }'
+  yq -I4 e "${YAML_PREFIX}.web.locations[\"/sites/simpletest\"] = $yaml_snippet " "$CONFIG_YAML_FILE" -i
+}
+
+# Run this is the context of wherever .platform.app.yaml is found.
+add_simpletest_dir_as_writable_on_platformsh(){
+  CONFIG_YAML_FILE='.platform.app.yaml'
+  log_notice "Running: ${FUNCNAME[0]} on $CONFIG_YAML_FILE"
+  add_simpletest_dir_as_writable "$(find_path $CONFIG_YAML_FILE)" ""
+}
+
+# Run this is the context of wherever .upsun/config.yaml is found.
+add_simpletest_dir_as_writable_on_upsun(){
+  CONFIG_YAML_FILE='.upsun/config.yaml'
+  log_notice "Running: ${FUNCNAME[0]} on $CONFIG_YAML_FILE"
+  APPLICATION_NAME="drupal"
+  add_simpletest_dir_as_writable "$(find_path $CONFIG_YAML_FILE)"  ".applications.${APPLICATION_NAME}"
+}

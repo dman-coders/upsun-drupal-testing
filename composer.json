@@ -1,11 +1,11 @@
 {
     "name": "upsun/drupal-testing",
-    "description": "Initialize phpunit and Seleium test framework for Upsun and ddev style projects",
+    "description": "Initialize phpunit and Selenium test framework for Upsun and ddev style projects",
     "type": "library",
     "require": {
     },
     "require-dev": {
-        "drupal/core-dev": "11.x-dev"
+        "drupal/core-dev": "*"
     },
     "authors": [
         {
@@ -13,5 +13,16 @@
             "email": "dman@coders.co.nz"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "scripts": {
+        "post-install-cmd": [
+            "@setup-testing"
+        ],
+        "post-update-cmd": [
+            "@setup-testing"
+        ],
+        "setup-testing": [
+            "bash vendor/upsun/drupal-testing/bin/setup_composer.sh"
+        ]
+    }
 }
