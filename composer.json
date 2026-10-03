@@ -3,8 +3,6 @@
     "description": "Initialize phpunit and Selenium test framework for Upsun and ddev style projects",
     "type": "library",
     "require": {
-    },
-    "require-dev": {
         "drupal/core-dev": "*"
     },
     "authors": [
