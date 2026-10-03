@@ -8,7 +8,7 @@ set -e
 # Expected to run from inside the container context where composer ran.
 
 # The name of the web docroot relative to the app root. Usually `web` or `docroot`
-DOCROOT="${$DOCROOT:-web";
+DOCROOT="${DOCROOT:-web";
 
 # Utilities
 script_path=$(dirname "$(readlink -f "$0")")
