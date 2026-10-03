@@ -21,15 +21,15 @@ log_info "Working composer location is $COMPOSER_JSON_PATH , APP_ROOT is $APP_RO
 cd $APP_ROOT
 
 # Check if drupal/core-dev is installed
-check_drupal_core_dev() {
-  if [ ! -d "vendor/drupal/core-dev" ]; then
-    log_warning "drupal/core-dev is not installed. This package requires it as a dev dependency."
-    log_warning "Run: composer require --dev drupal/core-dev"
-    return 1
-  fi
-  log_info "drupal/core-dev is installed."
-  return 0
-}
+check_drupal_core_dev() {                                                                                                                                                                                                        
+  if ! composer show drupal/core-dev >/dev/null 2>&1; then                                                                                                                                                                       
+    log_warning "drupal/core-dev is not installed. This package requires it as a dev dependency."                                                                                                                                
+    log_warning "Run: composer require --dev drupal/core-dev"                                                                                                                                                                    
+    return 1                                                                                                                                                                                                                     
+  fi                                                                                                                                                                                                                             
+  log_info "drupal/core-dev is installed."                                                                                                                                                                                       
+  return 0                                                                                                                                                                                                                       
+} 
 
 # Add sample test runner scripts to composer.json for easy invocation
 add_sample_run_tests_as_composer_scripts() {
